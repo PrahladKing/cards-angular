@@ -1,0 +1,19 @@
+@if (isFaceDown()) {
+  <div class="card face-down">
+    <div class="card-back">🎴</div>
+  </div>
+} @else if (card()) {
+  <div
+    class="card"
+    [class.playable]="isPlayable()"
+    [class.selected]="isSelected()"
+    [class.red]="suitColor === 'red'"
+    [class.black]="suitColor === 'black'"
+  >
+    <div class="card-rank">{{ card()!.rank }}</div>
+    <div class="card-suit">{{ suitSymbol }}</div>
+  </div>
+} @else {
+  <div class="card empty"></div>
+}
+

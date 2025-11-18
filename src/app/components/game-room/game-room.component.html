@@ -1,0 +1,107 @@
+@if (room() && currentPlayer()) {
+  <div class="game-room">
+    <div class="game-header">
+      <div class="room-info">
+        <h2>Room: {{ room()!.code }}</h2>
+        <button class="leave-btn" (click)="leaveRoom()">Leave Room</button>
+      </div>
+    </div>
+
+    @if (room()!.status === 'waiting') {
+      <div class="waiting-room">
+        <h3>Waiting for players...</h3>
+        <div class="players-list">
+          @for (player of room()!.players; track player.id) {
+            <div class="player-item">
+              <span>{{ player.name }}</span>
+              @if (player.isHost) {
+                <span class="host-badge">Host</span>
+              }
+            </div>
+          }
+        </div>
+        <p class="players-count">
+          {{ room()!.players.length }} / {{ room()!.maxPlayers }} players
+        </p>
+        @if (currentPlayer()!.isHost && room()!.players.length >= 2) {
+          <button class="start-btn" (click)="startGame()">Start Game</button>
+        } @else if (currentPlayer()!.isHost) {
+          <p class="waiting-text">Waiting for more players to join...</p>
+        }
+      </div>
+    } @else if (room()!.status === 'playing') {
+      <div class="game-board">
+        <div class="other-players">
+          @for (player of otherPlayers(); track player.id) {
+            <div class="player-area">
+              <div class="player-name">{{ getPlayerName(player) }}</div>
+              <div class="player-cards">
+                @for (card of player.cards; track $index) {
+                  <app-card [isFaceDown]="true" />
+                }
+              </div>
+              <div class="player-info">
+                Cards: {{ player.cards.length }}
+                @if (room()!.currentTurn === player.id) {
+                  <span class="turn-indicator">👈 Your Turn</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="game-center">
+          <div class="discard-pile">
+            <h4>Discard Pile</h4>
+            @if (topDiscardCard()) {
+              <app-card [card]="topDiscardCard()!" />
+            } @else {
+              <app-card />
+            }
+          </div>
+          <div class="deck">
+            <h4>Deck</h4>
+            <app-card [isFaceDown]="true" />
+            <p>{{ room()!.deck.length }} cards</p>
+          </div>
+        </div>
+
+        <div class="my-area">
+          <div class="my-info">
+            <h3>{{ currentPlayer()!.name }}</h3>
+            @if (isMyTurn()) {
+              <span class="your-turn">Your Turn!</span>
+            }
+          </div>
+          <div class="my-cards">
+            @for (card of myCards(); track $index) {
+              <app-card
+                [card]="card"
+                [isPlayable]="isMyTurn()"
+                [isSelected]="selectedCardIndex() === $index"
+                (click)="selectCard($index)"
+              />
+            }
+          </div>
+          <div class="game-actions">
+            <button
+              class="action-btn draw-btn"
+              (click)="drawCard()"
+              [disabled]="!isMyTurn()"
+            >
+              Draw Card
+            </button>
+            <button
+              class="action-btn play-btn"
+              (click)="playCard()"
+              [disabled]="!canPlayCard()"
+            >
+              Play Card
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+

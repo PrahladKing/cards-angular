@@ -1,59 +1,137 @@
-# Cards
+# Cards Game - Multiplayer Real-time Card Game
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.9.
+A multiplayer card game application built with Angular and Firebase, featuring real-time gameplay and room-based multiplayer functionality similar to Ludo.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- 🎴 **Real-time Multiplayer**: Play cards with friends in real-time using Firebase Realtime Database
+- 🏠 **Room System**: Create or join rooms using 6-digit room codes
+- 👥 **Friend Invites**: Share room codes with friends to join games
+- 🎮 **Interactive Gameplay**: Select and play cards with a modern UI
+- 📱 **Responsive Design**: Works on desktop and mobile devices
 
-```bash
-ng serve
-```
+## Prerequisites
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js (v18 or higher)
+- npm or yarn
+- Firebase project with Realtime Database enabled
 
-## Code scaffolding
+## Setup Instructions
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 1. Install Dependencies
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
+### 2. Configure Firebase
 
-To build the project run:
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable **Realtime Database** in your Firebase project
+3. Copy your Firebase configuration from Project Settings
+4. Update `src/environments/environment.ts` and `src/environments/environment.prod.ts` with your Firebase credentials:
+
+```typescript
+export const environment = {
+  production: false,
+  firebase: {
+    apiKey: 'YOUR_API_KEY',
+    authDomain: 'YOUR_AUTH_DOMAIN',
+    projectId: 'YOUR_PROJECT_ID',
+    storageBucket: 'YOUR_STORAGE_BUCKET',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+    appId: 'YOUR_APP_ID',
+  },
+};
+```
+
+### 3. Configure Firebase Realtime Database Rules
+
+In Firebase Console, go to Realtime Database > Rules and set:
+
+```json
+{
+  "rules": {
+    "rooms": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
+```
+
+**Note**: For production, implement proper authentication and security rules.
+
+### 4. Run the Application
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The application will be available at `http://localhost:4200`
 
-## Running unit tests
+## How to Play
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. **Create a Room**:
+   - Enter your name
+   - Click "Create Room"
+   - Share the 6-digit room code with friends
+
+2. **Join a Room**:
+   - Enter your name and the room code
+   - Click "Join Room"
+
+3. **Start the Game**:
+   - Wait for at least 2 players to join
+   - Host clicks "Start Game" to begin
+
+4. **Gameplay**:
+   - Select a card from your hand
+   - Click "Play Card" to play it
+   - Or click "Draw Card" to draw from the deck
+   - Turns rotate automatically
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── home/           # Home page with room creation/joining
+│   │   ├── game-room/      # Game room component
+│   │   └── card/           # Card display component
+│   ├── services/
+│   │   ├── firebase.service.ts    # Firebase operations
+│   │   ├── room.service.ts         # Room management
+│   │   └── game.service.ts         # Game logic
+│   ├── models/
+│   │   └── room.model.ts           # TypeScript interfaces
+│   └── app.routes.ts       # Routing configuration
+└── environments/           # Environment configuration
+```
+
+## Technologies Used
+
+- **Angular 20**: Frontend framework
+- **Firebase Realtime Database**: Backend for real-time synchronization
+- **TypeScript**: Type-safe development
+- **RxJS**: Reactive programming
+- **SCSS**: Styling
+
+## Development
+
+### Build for Production
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### Run Tests
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## License
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT

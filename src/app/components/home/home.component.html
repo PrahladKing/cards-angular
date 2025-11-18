@@ -1,0 +1,89 @@
+<div class="home-container">
+  <div class="home-content">
+    <h1 class="title">🎴 Cards Game</h1>
+    <p class="subtitle">Play cards with your friends in real-time</p>
+
+    @if (errorMessage()) {
+      <div class="error-message">{{ errorMessage() }}</div>
+    }
+
+    <div class="actions">
+      <div class="action-card">
+        <h2>Create Room</h2>
+        <form [formGroup]="createRoomForm" (ngSubmit)="onCreateRoom()">
+          <div class="form-group">
+            <label for="create-player-name">Your Name</label>
+            <input
+              id="create-player-name"
+              type="text"
+              formControlName="playerName"
+              placeholder="Enter your name"
+              [disabled]="isLoading()"
+            />
+            @if (
+              createRoomForm.get('playerName')?.invalid &&
+              createRoomForm.get('playerName')?.touched
+            ) {
+              <span class="error">Name must be at least 2 characters</span>
+            }
+          </div>
+          <button type="submit" [disabled]="createRoomForm.invalid || isLoading()">
+            {{ isLoading() ? 'Creating...' : 'Create Room' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <div class="action-card">
+        <h2>Join Room</h2>
+        <form [formGroup]="joinRoomForm" (ngSubmit)="onJoinRoom()">
+          <div class="form-group">
+            <label for="join-player-name">Your Name</label>
+            <input
+              id="join-player-name"
+              type="text"
+              formControlName="playerName"
+              placeholder="Enter your name"
+              [disabled]="isLoading()"
+            />
+            @if (
+              joinRoomForm.get('playerName')?.invalid &&
+              joinRoomForm.get('playerName')?.touched
+            ) {
+              <span class="error">Name must be at least 2 characters</span>
+            }
+          </div>
+          <div class="form-group">
+            <label for="room-code">Room Code</label>
+            <input
+              id="room-code"
+              type="text"
+              formControlName="roomCode"
+              placeholder="Enter 6-digit code"
+              maxlength="6"
+              [disabled]="isLoading()"
+              (input)="
+                joinRoomForm.patchValue({
+                  roomCode: $any($event.target).value.toUpperCase()
+                })
+              "
+            />
+            @if (
+              joinRoomForm.get('roomCode')?.invalid &&
+              joinRoomForm.get('roomCode')?.touched
+            ) {
+              <span class="error">Room code must be 6 characters</span>
+            }
+          </div>
+          <button type="submit" [disabled]="joinRoomForm.invalid || isLoading()">
+            {{ isLoading() ? 'Joining...' : 'Join Room' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

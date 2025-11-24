@@ -1,0 +1,11 @@
+<button (click)="getUsers()" type="button">click here</button>
+
+@if(users$) {
+<ul>
+    @for (user of users$ | async; track $index) {
+        <li> {{user.name}} </li>
+    }
+</ul>
+}
+
+<button (click)="addUser()">add User</button>

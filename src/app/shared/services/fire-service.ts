@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Database, listVal, objectVal, push, ref, set, update } from '@angular/fire/database';
-import { User } from '../components/fire/fire';
+import { User } from '../../core/fire/fire';
 
 @Injectable({
   providedIn: 'root',

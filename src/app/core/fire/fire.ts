@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FireService } from '../../services/fire-service';
+import { FireService } from '../../shared/services/fire-service';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 

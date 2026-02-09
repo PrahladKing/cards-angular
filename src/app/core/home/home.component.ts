@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RoomService } from '../../services/room.service';
+import { RoomService } from '../../shared/services/room.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

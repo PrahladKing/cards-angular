@@ -1,21 +1,39 @@
 import { Routes } from '@angular/router';
+import { authRedirectGuard, loginGuard } from './shared/guards/auth-guard';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   loadComponent: () => import('./components/home/home.component').then((m) => m.HomeComponent),
-  // },
   {
-    path: '',
-    loadComponent: () => import('./components/fire/fire').then((m) => m.Fire),
+    path: 'signin',
+    loadComponent: () => import('./features/authentication/signin/signin.component').then((m) => m.SigninComponent),
+    canActivate: [authRedirectGuard],
   },
   {
-    path: 'room/:code',
-    loadComponent: () =>
-      import('./components/game-room/game-room.component').then((m) => m.GameRoomComponent),
+    path: 'admin',
+    loadComponent: () => import('./features/layout/layout').then((m) => m.Layout),
+    canActivate: [loginGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./core/home/home.component').then((m) => m.HomeComponent),
+      },
+      {
+        path: 'fire',
+        loadComponent: () => import('./core/fire/fire').then((m) => m.Fire),
+      },
+      {
+        path: 'room/:code',
+        loadComponent: () =>
+          import('./core/game-room/game-room.component').then((m) => m.GameRoomComponent),
+      },
+    ]
+  },
+  {
+    path: '',
+    redirectTo: 'admin',
+    pathMatch: 'full',
   },
   {
     path: '**',
-    redirectTo: '',
+    loadComponent: () => import('./core/not-found/not-found-component').then((m) => m.NotFoundComponent),
   },
 ];

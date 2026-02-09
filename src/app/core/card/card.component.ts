@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Card } from '../../models/room.model';
+import { Card } from '../../shared/models/room.model';
 import { CommonModule } from '@angular/common';
 
 @Component({

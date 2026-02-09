@@ -1,10 +1,10 @@
 import { Component, inject, signal, computed, effect, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RoomService } from '../../services/room.service';
-import { GameService } from '../../services/game.service';
+import { RoomService } from '../../shared/services/room.service';
+import { GameService } from '../../shared/services/game.service';
 import { CardComponent } from '../card/card.component';
-import { Room, Player, Card } from '../../models/room.model';
+import { Room, Player, Card } from '../../shared/models/room.model';
 
 @Component({
   selector: 'app-game-room',

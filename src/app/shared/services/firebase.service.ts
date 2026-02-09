@@ -1,18 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, Database, ref, set, get, onValue, off, push, update, remove } from 'firebase/database';
-import { environment } from '../../../environments/environment';
+import { Database, ref, set, get, objectVal, push, update, remove } from '@angular/fire/database';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
-  private database: Database;
-
-  constructor() {
-    const app = initializeApp(environment.firebase);
-    this.database = getDatabase(app);
-  }
+  private database = inject(Database);
 
   getDatabase(): Database {
     return this.database;
@@ -27,19 +21,13 @@ export class FirebaseService {
     return snapshot.val();
   }
 
-  subscribe(path: string, callback: (data: unknown) => void): () => void {
-    const dbRef = ref(this.database, path);
-    onValue(dbRef, (snapshot) => {
-      callback(snapshot.val());
-    });
-    return () => off(dbRef);
+  subscribe(path: string): Observable<unknown> {
+    return objectVal(ref(this.database, path));
   }
 
-  push(path: string, data: unknown): Promise<string> {
-    return new Promise((resolve) => {
-      const newRef = push(ref(this.database, path), data);
-      resolve(newRef.key || '');
-    });
+  push(path: string, data: unknown) {
+    const dbRef = ref(this.database, path);
+    return push(dbRef, data);
   }
 
   update(path: string, data: Partial<unknown>): Promise<void> {

@@ -5,6 +5,9 @@
 
   <div class="form-section">
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      @if (errorMessage()) {
+        <div class="error-message">{{ errorMessage() }}</div>
+      }
       <div class="form-group">
         <label for="mobile">Mobile</label>
         <input
@@ -90,8 +93,8 @@
         }
       </div>
 
-      <button type="submit" [disabled]="userForm.invalid" class="submit-btn">
-        Submit
+      <button type="submit" [disabled]="userForm.invalid || isLoading()" class="submit-btn">
+        {{ isLoading() ? 'Adding...' : 'Submit' }}
       </button>
     </form>
   </div>

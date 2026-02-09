@@ -1,6 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { Room, Player } from '../models/room.model';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ export class RoomService {
   private firebaseService = inject(FirebaseService);
   private currentRoom = signal<Room | null>(null);
   private currentPlayer = signal<Player | null>(null);
-  private unsubscribeRoom: (() => void) | null = null;
+  private unsubscribeRoom: Subscription | null = null;
 
   readonly room = this.currentRoom.asReadonly();
   readonly player = this.currentPlayer.asReadonly();
@@ -96,7 +97,7 @@ export class RoomService {
     }
 
     if (this.unsubscribeRoom) {
-      this.unsubscribeRoom();
+      this.unsubscribeRoom.unsubscribe();
       this.unsubscribeRoom = null;
     }
 
@@ -124,10 +125,10 @@ export class RoomService {
 
   private subscribeToRoom(roomCode: string): void {
     if (this.unsubscribeRoom) {
-      this.unsubscribeRoom();
+      this.unsubscribeRoom.unsubscribe();
     }
 
-    this.unsubscribeRoom = this.firebaseService.subscribe(`rooms/${roomCode}`, (data) => {
+    this.unsubscribeRoom = this.firebaseService.subscribe(`rooms/${roomCode}`).subscribe((data) => {
       if (data) {
         this.currentRoom.set(data as Room);
       } else {

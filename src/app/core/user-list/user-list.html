@@ -5,4 +5,35 @@
       Add User
     </button>
   </div>
+
+  <div class="users-section">
+    @if (isLoading()) {
+      <div class="loading">Loading users...</div>
+    } @else if (users().length === 0) {
+      <div class="empty-state">No users found</div>
+    } @else {
+      <div class="users-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Mobile</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users(); track user.id || $index) {
+              <tr>
+                <td>{{ user.id || '-' }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.mobile }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
 </div>

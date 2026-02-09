@@ -26,3 +26,11 @@ export const authRedirectGuard: CanActivateFn = (route, state) => {
     return false;  // Prevents access to the route
   }
 };
+
+export const adminGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  if (!authService.isAdmin()) {
+    return inject(Router).createUrlTree(["/admin"]);  // Redirects to the admin page
+  }
+  return true;  // Allows access to the route
+};

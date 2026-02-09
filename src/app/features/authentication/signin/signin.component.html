@@ -1,1 +1,37 @@
-<p>signin.component works!</p>
+<div class="signin-container">
+  <header>
+    <h1>Sign In</h1>
+  </header>
+
+  <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+    @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        id="username"
+        type="text"
+        formControlName="username"
+        placeholder="Enter your username"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Enter your password"
+      />
+    </div>
+
+    <button [disabled]="signinForm.invalid" type="submit">
+      Sign In
+    </button>
+  </form>
+</div>

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authRedirectGuard, loginGuard } from './shared/guards/auth-guard';
+import { adminGuard, authRedirectGuard, loginGuard } from './shared/guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -19,6 +19,16 @@ export const routes: Routes = [
       {
         path: 'fire',
         loadComponent: () => import('./core/fire/fire').then((m) => m.Fire),
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./core/user-list/user-list').then((m) => m.UserList),
+        canActivate: [adminGuard],
+      },
+      {
+        path: 'add-user',
+        loadComponent: () => import('./core/add-user/add-user').then((m) => m.AddUser),
+        canActivate: [adminGuard],
       },
       {
         path: 'room/:code',

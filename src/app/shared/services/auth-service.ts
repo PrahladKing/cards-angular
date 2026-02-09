@@ -21,5 +21,19 @@ export class AuthService {
     return localStorage.getItem("c-token") ?? "";
   }
 
+  clearToken() {
+    localStorage.removeItem('c-token');
+  }
 
+  isAdmin(): boolean {
+    return localStorage.getItem('is-admin') === 'true';
+  }
+
+  clearIsAdmin() {
+    localStorage.removeItem('is-admin');
+  }
+
+  setIsAdmin() {
+    localStorage.setItem('is-admin', 'true');
+  }
 }

@@ -30,8 +30,8 @@
       />
     </div>
 
-    <button [disabled]="signinForm.invalid" type="submit">
-      Sign In
+    <button [disabled]="signinForm.invalid || isLoading()" type="submit">
+      {{ isLoading() ? 'Signing In...' : 'Sign In' }}
     </button>
   </form>
 </div>

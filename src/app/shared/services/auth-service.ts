@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { FirebaseService } from './firebase.service';
+import { FirestoreService } from './firestore.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private firebaseService = inject(FirebaseService);
+  private firestoreService = inject(FirestoreService);
+  private readonly USERS_COLLECTION = 'users';
   
   isAuthenticated(): boolean {
     if (this.token) {
@@ -39,34 +40,48 @@ export class AuthService {
     localStorage.setItem('is-admin', 'true');
   }
 
-  // firebase user sign up
+  // firestore user sign up
   async signUp(user: User): Promise<string> {
-    const idRef = this.firebaseService.push('users', user);
-    const userId = idRef.key || '';
-    if (userId) {
-      await this.firebaseService.update(`users/${userId}`, { id: userId });
-    }
+    const userId = await this.firestoreService.add(this.USERS_COLLECTION, user);
     return userId;
   }
 
   async getUserList(): Promise<User[]> {
-    const usersObj = await this.firebaseService.get('users') as Record<string, User> | null;
-    if (!usersObj) {
-      return [];
-    }
-    return Object.keys(usersObj).map(key => ({
-      ...usersObj[key],
-      id: key
-    }));
+    const users = await this.firestoreService.getAll(this.USERS_COLLECTION) as User[];
+    return users;
   }
 
   async getUser(userId: string): Promise<User> {
-    const user = await this.firebaseService.get(`users/${userId}`);
-    return user as User;
+    const user = await this.firestoreService.getById(this.USERS_COLLECTION, userId) as User;
+    return user;
   }
 
-  async updateUser(userId: string, user: User): Promise<void> {
-    await this.firebaseService.update(`users/${userId}`, user);
+  async updateUser(userId: string, user: Partial<User>): Promise<void> {
+    await this.firestoreService.update(this.USERS_COLLECTION, userId, user);
+  }
+
+  async isUserExists(username: string): Promise<boolean> {
+    const users = await this.firestoreService.queryByField(this.USERS_COLLECTION, 'username', username) as User[];
+    return users.length > 0;
+  }
+
+  async login(username: string, password: string): Promise<User | null> {
+    const users = await this.firestoreService.queryByField(this.USERS_COLLECTION, 'username', username) as User[];
+    if (users.length === 0) {
+      return null;
+    }
+    
+    // Find the user with matching password
+    const user = users.find(u => u.password === password);
+    if (!user) {
+      return null;
+    }
+    
+    if (user.username === 'prahlad_king') {
+      this.setIsAdmin();
+    }
+    this.token = user.id || '';
+    return user;
   }
 }
 

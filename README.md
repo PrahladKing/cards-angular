@@ -27,9 +27,10 @@ npm install
 ### 2. Configure Firebase
 
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
-2. Enable **Realtime Database** in your Firebase project
-3. Copy your Firebase configuration from Project Settings
-4. Update `src/environments/environment.ts` and `src/environments/environment.prod.ts` with your Firebase credentials:
+2. Enable **Realtime Database** in your Firebase project (for rooms/game data)
+3. Enable **Firestore Database** in your Firebase project (for users data)
+4. Copy your Firebase configuration from Project Settings
+5. Update `src/environments/environment.ts` and `src/environments/environment.prod.ts` with your Firebase credentials:
 
 ```typescript
 export const environment = {
@@ -52,15 +53,32 @@ In Firebase Console, go to Realtime Database > Rules and set:
 ```json
 {
   "rules": {
-    "rooms": {
-      ".read": true,
-      ".write": true
+    ".read": true,
+    ".write": true
+  }
+}
+```
+
+**Note**: 
+- For production, implement proper authentication and security rules.
+- The code includes a fallback mechanism if indexes are not defined. Firebase will automatically create indexes when queries are first executed, but you may see a warning in the console until the index is created.
+
+### 3.1 Configure Firestore Security Rules
+
+In Firebase Console, go to Firestore Database > Rules and set:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if true;
     }
   }
 }
 ```
 
-**Note**: For production, implement proper authentication and security rules.
+**Note**: For production, implement proper authentication and security rules. The above rules allow public access for development only.
 
 ### 4. Run the Application
 
